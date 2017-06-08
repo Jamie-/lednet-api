@@ -1,0 +1,5 @@
+# Ignore config file
+config.json
+
+# Ignore Python bytecode
+*.pyc
