@@ -1,5 +1,8 @@
-# Ignore config file
+# Config file
 config.json
 
-# Ignore Python bytecode
+# Save file
+led.json
+
+# Python bytecode
 *.pyc
