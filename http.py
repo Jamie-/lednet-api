@@ -1,25 +1,8 @@
-#!/usr/bin/python
 from flask import Flask, abort, request, make_response, jsonify
 from strip import Strip
-import os
-import json
 import time
+import json
 
-##
-# Setup
-##
-
-# Read config file
-__location__ = os.path.realpath(
-    os.path.join(os.getcwd(), os.path.dirname(__file__)))
-with open(os.path.join(__location__, 'config.json')) as config_file:
-    config = json.load(config_file)
-
-# Init list of strips in this system
-strips = []
-for i in range(config["stripQty"]):
-    strips.append(Strip())
-    
 lednet = Flask(__name__)
 
 ##
@@ -120,8 +103,8 @@ def error_internal_server_error(error):
     return make_response(jsonify({'error': {'description': 'Internal server error.', 'code': 500}}), 500)
 
 ##
-# Main
+# Start servr
 ##
 
-if (__name__) == '__main__':
+def start_server():
     lednet.run(host='0.0.0.0')
