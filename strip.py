@@ -1,9 +1,9 @@
 class Strip:
     
-    def __init__(self):
-        self.r = 0
-        self.g = 0
-        self.b = 0
+    def __init__(self, r=0, g=0, b=0):
+        self.r = r
+        self.g = g
+        self.b = b
         self.mode = "day"
         
     def setRgb(self, r, g, b):
