@@ -28,7 +28,7 @@ def get_config():
     return json.dumps(config)
 
 # See system LED data
-@lednet.route('/led')
+@lednet.route('/led', methods=['GET'])
 def get_led_data():
     return jsonify({"strips": {"qty": config["stripQty"]}})
 
