@@ -38,6 +38,16 @@ signal.signal(signal.SIGINT, sigint_handler)
 
 # Main
 if (__name__) == '__main__':
+    # Print splash
+    print " _     _____ ____             _"
+    print "| |   | ____|  _ \\ _ __   ___| |_"
+    print "| |   |  _| | | | | '  \\ / _ \\ __|"
+    print "| |___| |___| |_| | | | |  __/ |_"
+    print "|_____|_____|____/|_| |_|\\___|\\__|"
+    print
+    print "Welcome to LEDnet!"
+    print
+    
     # Load save
     save_file_path = os.path.join(__location__, 'led.json')
     if (os.path.isfile(save_file_path)):
