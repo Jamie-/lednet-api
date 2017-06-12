@@ -2,8 +2,8 @@ from flask import jsonify
 
 class Strip:
     
-    def __init__(self, name, r=0, g=0, b=0):
-        self.name = name
+    def __init__(self, id, r=0, g=0, b=0):
+        self.id = id
         self.r = r
         self.g = g
         self.b = b
@@ -16,8 +16,8 @@ class Strip:
         self.mode = "day"
         # output to strip
         
-    def getName(self):
-        return self.name
+    def getId(self):
+        return self.id
         
     def getR(self):
         return self.r
@@ -40,7 +40,7 @@ class Strip:
             {
                 'strip':
              {
-                 'name': self.getName(),
+                 'id': self.getId(),
                  'red': self.getR(),
                  'green': self.getG(),
                  'blue': self.getB(),

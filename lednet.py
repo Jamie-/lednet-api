@@ -32,13 +32,13 @@ def load_save(strip_array):
         with open(save_file_path) as save_file:
             save_data = json.load(save_file)
             for s in save_data['strips']:
-                strip_array.append(Strip(s['name'], r=s['red'], g=s['green'], b=s['blue']))
+                strip_array.append(Strip(s['id'], r=s['red'], g=s['green'], b=s['blue']))
             print "[ OK ] Data loaded."
     else:
         # Fill with blank strips
         print "[INFO] No save file found. Starting blank."
         for s in config["strips"]:
-            strip_array.append(Strip(s["name"]))
+            strip_array.append(Strip(s["id"]))
         
 # Save state
 def save_state():
@@ -46,7 +46,7 @@ def save_state():
     save_data = {}
     save_data['strips'] = []
     for s in strips:
-        save_data['strips'].append({"name": s.getName(), "red": s.getR(), "green": s.getG(), "blue": s.getB()})
+        save_data['strips'].append({"id": s.getId(), "red": s.getR(), "green": s.getG(), "blue": s.getB()})
     with open(save_file_path, 'w') as save_file:
         json.dump(save_data, save_file)
     print "[ OK ] Data saved."

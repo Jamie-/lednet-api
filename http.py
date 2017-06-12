@@ -5,9 +5,9 @@ import json
 
 lednet = Flask(__name__)
 
-def get_strip(name):
+def get_strip(id):
     for s in strips:
-        if (s.getName() == name):
+        if (s.getId() == id):
             strip = s
             return s
     return None
@@ -40,15 +40,15 @@ def get_led_data():
     return jsonify({"strips": config["strips"]})
 
 # View strip output data
-@lednet.route('/led/<string:strip_name>', methods=['GET'])
-def get_strip_values(strip_name):
-    strip = get_strip(strip_name)
+@lednet.route('/led/<string:strip_id>', methods=['GET'])
+def get_strip_values(strip_id):
+    strip = get_strip(strip_id)
     if (strip == None):
         abort(404)
     return strip.get_data_as_json()
 
-@lednet.route('/led/<string:strip_name>', methods=['POST'])
-def set_strip_rgb(strip_name):
+@lednet.route('/led/<string:strip_id>', methods=['POST'])
+def set_strip_rgb(strip_id):
     # Check request is JSON
     if not (request.json):
         abort(400)
@@ -56,7 +56,7 @@ def set_strip_rgb(strip_name):
     if not (check_auth(request.json)):
         abort(401)
     # Check strip exists
-    strip = get_strip(strip_name)
+    strip = get_strip(strip_id)
     if (strip == None):
         abort(404)
     r = request.json.get('r')
