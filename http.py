@@ -22,7 +22,7 @@ def get_index():
 
 @lednet.route('/info', methods=['GET'])
 def get_info():
-    return jsonify({"system": {"systemName": config["systemName"], "systemTime": time.strftime("%H:%M.%S"), "strips": config["stripQty"], "cycle": "day"}})
+    return jsonify({"system": {"systemName": config["systemName"], "systemTime": time.strftime("%H:%M.%S"), "strips": len(strips), "cycle": "day"}})
 
 @lednet.route('/config', methods=['GET', 'POST'])
 def get_config():
