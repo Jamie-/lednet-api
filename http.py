@@ -1,12 +1,13 @@
 from flask import Flask, abort, request, make_response, jsonify
 from strip import Strip
+from data import LEDnet
 import time
 import json
 
 lednet = Flask(__name__)
 
 def get_strip(id):
-    for s in strips:
+    for s in LEDnet.strips:
         if (s.getId() == id):
             strip = s
             return s
@@ -18,11 +19,11 @@ def get_strip(id):
 
 @lednet.route('/', methods=['GET'])
 def get_index():
-    return jsonify({"systemName": config["systemName"], "noOfStrips": len(strips)})
+    return jsonify({"systemName": LEDnet.config["systemName"], "noOfStrips": len(LEDnet.strips)})
 
 @lednet.route('/info', methods=['GET'])
 def get_info():
-    return jsonify({"system": {"systemName": config["systemName"], "systemTime": time.strftime("%H:%M.%S"), "strips": len(strips), "cycle": "day"}})
+    return jsonify({"system": {"systemName": LEDnet.config["systemName"], "systemTime": time.strftime("%H:%M.%S"), "strips": len(LEDnet.strips), "cycle": "day"}})
 
 @lednet.route('/config', methods=['GET', 'POST'])
 def get_config():
@@ -32,12 +33,12 @@ def get_config():
         abort(400)
     if not (check_auth(request.json)):
         abort(401)
-    return json.dumps(config)
+    return json.dumps(LEDnet.config)
 
 # See system LED data
 @lednet.route('/led', methods=['GET'])
 def get_led_data():
-    return jsonify({"strips": config["strips"]})
+    return jsonify({"strips": LEDnet.config["strips"]})
 
 # View strip output data
 @lednet.route('/led/<string:strip_id>', methods=['GET'])
@@ -76,9 +77,9 @@ def set_strip_rgb(strip_id):
 # Check Auth
 ##
 def check_auth(json_data):
-    if (config.has_key("authKey") and not 'authKey' in json_data):
+    if (LEDnet.config.has_key("authKey") and not 'authKey' in json_data):
         return False
-    if (config.has_key("authKey") and 'authKey' in json_data and not (config["authKey"] == json_data.get('authKey'))):
+    if (LEDnet.config.has_key("authKey") and 'authKey' in json_data and not (LEDnet.config["authKey"] == json_data.get('authKey'))):
         return False
     return True
 

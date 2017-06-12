@@ -4,9 +4,8 @@ import json
 import http
 import signal
 import sys
+from data import LEDnet
 from strip import Strip
-
-strips = [] # List of strips in this system
 
 # Set paths
 __location__ = os.path.realpath(
@@ -37,7 +36,7 @@ def load_save(strip_array):
     else:
         # Fill with blank strips
         print "[INFO] No save file found. Starting blank."
-        for s in config["strips"]:
+        for s in LEDnet.config["strips"]:
             strip_array.append(Strip(s["id"]))
         
 # Save state
@@ -45,7 +44,7 @@ def save_state():
     print "[INFO] Saving data..."
     save_data = {}
     save_data['strips'] = []
-    for s in strips:
+    for s in LEDnet.strips:
         save_data['strips'].append({"id": s.getId(), "red": s.getR(), "green": s.getG(), "blue": s.getB()})
     with open(save_file_path, 'w') as save_file:
         json.dump(save_data, save_file)
@@ -72,12 +71,10 @@ if (__name__) == '__main__':
     print
     
     # Load config
-    config = load_config()
+    LEDnet.config = load_config()
     
     # Load save
-    load_save(strips)
+    load_save(LEDnet.strips)
     
     # Start HTTP server
-    http.config = config
-    http.strips = strips
     http.start_server()
