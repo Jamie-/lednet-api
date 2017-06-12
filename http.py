@@ -5,6 +5,13 @@ import json
 
 lednet = Flask(__name__)
 
+def get_strip(name):
+    for s in strips:
+        if (s.getName() == name):
+            strip = s
+            return s
+    return None
+
 ##
 # Endpoints
 ##
@@ -30,26 +37,28 @@ def get_config():
 # See system LED data
 @lednet.route('/led', methods=['GET'])
 def get_led_data():
-    return jsonify({"strips": {"qty": config["stripQty"]}})
+    return jsonify({"strips": config["strips"]})
 
 # View strip output data
-@lednet.route('/led/<int:strip_id>', methods=['GET'])
-def get_strip_values(strip_id):
-    if (strip_id >= len(strips)):
+@lednet.route('/led/<string:strip_name>', methods=['GET'])
+def get_strip_values(strip_name):
+    strip = get_strip(strip_name)
+    if (strip == None):
         abort(404)
-    s = strips[strip_id]
-    return jsonify({'strip': {'red': s.getR(), 'green': s.getG(), 'blue': s.getB(), 'mode': s.get_mode()}})
+    return strip.get_data_as_json()
 
-@lednet.route('/led/<int:strip_id>', methods=['POST'])
-def set_strip_rgb(strip_id):
+@lednet.route('/led/<string:strip_name>', methods=['POST'])
+def set_strip_rgb(strip_name):
     # Check request is JSON
     if not (request.json):
         abort(400)
     # Check for authentication
     if not (check_auth(request.json)):
         abort(401)
-    # Update strips
-    s = strips[strip_id]
+    # Check strip exists
+    strip = get_strip(strip_name)
+    if (strip == None):
+        abort(404)
     r = request.json.get('r')
     if not (isinstance(r, int) and 0 <= r <= 255):
         abort(400)
@@ -59,9 +68,9 @@ def set_strip_rgb(strip_id):
     b = request.json.get('b')
     if not (isinstance(b, int) and 0 <= b <= 255):
         abort(400)
-    s.setRgb(r, g, b)
+    strip.setRgb(r, g, b)
     # Return new values
-    return jsonify({'strip': {'red': s.getR(), 'green': s.getG(), 'blue': s.getB(), 'mode': s.get_mode()}})
+    return strip.get_data_as_json()
 
 ##
 # Check Auth
