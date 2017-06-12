@@ -26,12 +26,17 @@ def load_config():
 # Load save into strip_array
 def load_save(strip_array):
     if (os.path.isfile(save_file_path)):
+        # Make list of strip IDs in config
+        ids = []
+        for i in LEDnet.config["strips"]:
+            ids.append(i['id'])
         # Load saved strips from disk
         print "[INFO] Save file found. Loading..."
         with open(save_file_path) as save_file:
             save_data = json.load(save_file)
             for s in save_data['strips']:
-                strip_array.append(Strip(s['id'], r=s['red'], g=s['green'], b=s['blue']))
+                if (s['id'] in ids): # Remove entries not in config
+                    strip_array.append(Strip(s['id'], r=s['red'], g=s['green'], b=s['blue']))
             print "[ OK ] Data loaded."
     else:
         # Fill with blank strips
