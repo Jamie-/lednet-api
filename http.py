@@ -11,7 +11,7 @@ lednet = Flask(__name__)
 
 @lednet.route('/', methods=['GET'])
 def get_index():
-    return jsonify({"systemName": config["systemName"]})
+    return jsonify({"systemName": config["systemName"], "noOfStrips": len(strips)})
 
 @lednet.route('/info', methods=['GET'])
 def get_info():
