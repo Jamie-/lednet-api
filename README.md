@@ -19,12 +19,12 @@ Control Clients:
 
 ## Configuration File Options ##
 
-| Field      | Type    | Description                          |
-| ---------- | ------- | ------------------------------------ |
-| systemName | string  | System name.                         |
-| stripQty   | integer | Number of strips attached to system. |
-| cycle      | JSON    | Day/Night cycle start times.         |
-| authKey    | string  | System authentication key.           |
+| Field      | Type    | Description                                 |
+| ---------- | ------- | ------------------------------------------- |
+| systemName | string  | System name.                                |
+| strips     | list    | Configuration of strips attached to system. |
+| cycle      | JSON    | Day/Night cycle start times.                |
+| authKey    | string  | System authentication key.                  |
 
 #### Cycle Options ####
 
@@ -36,12 +36,40 @@ Control Clients:
 
 Time needs to be given in the format `%H:%M.%S`.
 
+#### Strips Options ####
+
+| Field  | Type    | Description                    |
+| ------ | ------- | ------------------------------ |
+| id     | string  | Strip identifier used for API. |
+| name   | string  | Pretty name for strip.         |
+| device | string  | Serial device for strip.       |
+| number | integer | Serial device strip number.    |
+
 #### Example Config ####
 
 ``` json
 {
     "systemName": "namae",
-    "stripQty": 2,
+    "strips" : [
+        {
+            "name": "Kitchen Wall",
+            "id": "k_wall",
+            "device": "/dev/kitchenusb",
+            "number": 0
+        },
+        {
+            "name": "Kitchen Floor",
+            "id": "k_floor",
+            "device": "/dev/kitchenusb",
+            "number": 1
+        },
+        {
+            "name": "Stairs",
+            "id": "stairs",
+            "device": "/dev/stairsusb",
+            "number": 0
+        }
+    ],
     "cycle": {
         "day": "08:00.00",
         "evening": "21:30.00",
@@ -94,9 +122,9 @@ Returns 401 UNAUTHORISED if authentication is incorrect and 400 BAD REQUEST if P
 Returns number of strips on system.
 
 #### Response Structure ####
-| Field | Type    | Description                          |
-| ----- | ------- | ------------------------------------ |
-| qty   | integer | Number of strips attached to system. |
+| Field  | Type | Description                        |
+| ------ | ---- | ---------------------------------- |
+| strips | list | List of strips attached to system. |
 
 ### View/Change Strip Values ###
 
@@ -138,6 +166,7 @@ Returns a 400 BAD REQUEST if POST data in incorrect format and 401 UNAUTHORISED 
 #### Response Structure ####
 | Field | Type    | Description         |
 | ----- | ------- | ------------------- |
+| id    | string  | Strip ID.           |
 | red   | integer | Red value.          |
 | green | integer | Green value.        |
 | blue  | integer | Blue value.         |
