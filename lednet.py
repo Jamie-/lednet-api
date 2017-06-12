@@ -6,16 +6,39 @@ import signal
 import sys
 from strip import Strip
 
-# Get directory
+strips = [] # List of strips in this system
+
+# Set paths
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
+save_file_path = os.path.join(__location__, 'led.json')
+config_file_path = os.path.join(__location__, 'config.json')
 
 # Read config file
-with open(os.path.join(__location__, 'config.json')) as config_file:
-    config = json.load(config_file)
-    
-# Init list of strips in this system
-strips = []
+def load_config():
+    try:
+        with open(config_file_path) as config_file:
+            print "[ OK ] Config loaded sucessfully."
+            return json.load(config_file)
+    except IOError:
+        print "[ERROR] Unable to load config file, quitting."
+        sys.exit(1)
+
+# Load save into strip_array
+def load_save(strip_array):
+    if (os.path.isfile(save_file_path)):
+        # Load saved strips from disk
+        print "[INFO] Save file found. Loading..."
+        with open(save_file_path) as save_file:
+            save_data = json.load(save_file)
+            for s in save_data['strips']:
+                strip_array.append(Strip(r=s['red'], g=s['green'], b=s['blue']))
+            print "[ OK ] Data loaded."
+    else:
+        # Fill with blank strips
+        print "[INFO] No save file found. Starting blank."
+        for i in range(config["stripQty"]):
+            strip_array.append(Strip())
         
 # Save state
 def save_state():
@@ -48,21 +71,11 @@ if (__name__) == '__main__':
     print "Welcome to LEDnet!"
     print
     
+    # Load config
+    config = load_config()
+    
     # Load save
-    save_file_path = os.path.join(__location__, 'led.json')
-    if (os.path.isfile(save_file_path)):
-        # Load saved strips from disk
-        print "[INFO] Save file found. Loading..."
-        with open(save_file_path) as save_file:
-            save_data = json.load(save_file)
-            for s in save_data['strips']:
-                strips.append(Strip(r=s['red'], g=s['green'], b=s['blue']))
-            print "[ OK ] Data loaded."
-    else:
-        # Fill with blank strips
-        print "[INFO] No save file found. Starting blank."
-        for i in range(config["stripQty"]):
-            strips.append(Strip())
+    load_save(strips)
     
     # Start HTTP server
     http.config = config
