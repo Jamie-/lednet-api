@@ -58,7 +58,7 @@ def save_state():
 # Add SIGINT handler (for ctrl-c interrupt)
 def sigint_handler(signum, frame):
     save_state()
-    print "[INFO] LEDnet now quitting."
+    print "[INFO] LEDnet now quitting..."
     sys.exit()
     
 signal.signal(signal.SIGINT, sigint_handler)
