@@ -1,4 +1,5 @@
 from flask import jsonify
+from data import LEDnet
 
 class Strip:
     
@@ -7,13 +8,13 @@ class Strip:
         self.r = r
         self.g = g
         self.b = b
-        self.mode = "day"
+        self.mode = "normal"
         
     def setRgb(self, r, g, b):
         self.r = r
         self.g = g
         self.b = b
-        self.mode = "day"
+        self.mode = "normal"
         # output to strip
         
     def getId(self):
@@ -31,8 +32,16 @@ class Strip:
     def get_mode(self):
         return self.mode
     
-    def set_night(self):
-        self.mode = "night"
+    def resume(self):
+        self.mode = "normal"
+        # output to strip
+    
+    def illuminate(self):
+        self.mode = "illuminate"
+        # output to strip
+    
+    def standby(self):
+        self.mode = "standby"
         # output to strip
         
     def get_data_as_json(self):

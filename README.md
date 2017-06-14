@@ -28,11 +28,11 @@ TBC
 
 #### Cycle Options ####
 
-| Field   | Type   | Description                      |
-| ------- | ------ | -------------------------------- |
-| day     | string | Starting time for day cycle.     |
-| evening | string | Starting time for evening cycle. |
-| night   | string | Starting time for night cycle.   |
+| Field      | Type   | Description                      |
+| ---------- | ------ | -------------------------------- |
+| normal     | string | Starting time for day cycle.     |
+| illuminate | string | Starting time for evening cycle. |
+| standby    | string | Starting time for night cycle.   |
 
 Time needs to be given in the format `%H:%M.%S`.
 
