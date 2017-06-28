@@ -15,7 +15,7 @@ class Strip:
         self.g = g
         self.b = b
         self.mode = "normal"
-        # output to strip
+        output(self, r, g, b)
         
     def getId(self):
         return self.id
@@ -34,15 +34,16 @@ class Strip:
     
     def resume(self):
         self.mode = "normal"
-        # output to strip
+        output(self, r, g, b)
     
     def illuminate(self):
         self.mode = "illuminate"
-        # output to strip
+        i = LEDnet.config["illuminate"]
+        output(self, i["red"], i["green"], i["blue"])
     
     def standby(self):
         self.mode = "standby"
-        # output to strip
+        output(self, 0, 0, 0)
         
     def get_data_as_json(self):
         return jsonify(
@@ -57,3 +58,15 @@ class Strip:
              }
             }
         )
+
+# Output to strip over serial
+def output(strip, r, g, b):
+    strips = LEDnet.config["strips"]
+    port = None
+    number = None
+    for s in strips:
+        if (s["id"] == strip.getId()):
+            port = s["device"]
+            number = s["number"]
+            break
+    LEDnet.devices[port].write(bytearray([number, r, g, b]))
