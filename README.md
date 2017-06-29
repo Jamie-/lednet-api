@@ -23,8 +23,17 @@ TBC
 | ---------- | ------- | ------------------------------------------- |
 | systemName | string  | System name.                                |
 | strips     | list    | Configuration of strips attached to system. |
+| illuminate | JSON    | Illumination colour setting.                |
 | cycle      | JSON    | Day/Night cycle start times.                |
 | authKey    | string  | System authentication key.                  |
+
+#### Illumination Options ####
+
+| Field | Type    | Description  |
+| ----- | ------- | ------------ |
+| red   | integer | Red value.   |
+| green | integer | Green value. |
+| blue  | integer | Blue value.  |
 
 #### Cycle Options ####
 
@@ -70,6 +79,11 @@ Time needs to be given in the format `%H:%M.%S`.
             "number": 0
         }
     ],
+    "illuminate": {
+      "red": 128,
+      "green": 128,
+      "blue": 128
+    },
     "cycle": {
         "day": "08:00.00",
         "evening": "21:30.00",
