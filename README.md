@@ -150,11 +150,11 @@ Returns data for all strips attached to the system.
 
 ### View/Change Strip Values ###
 
-**GET /led/{strip_number}**
-Gets strip by ID number.
+**GET /led/{strip_id}**
+Gets strip by ID.
 Returns RGB values and current mode.
 
-**POST /led/{strip_number}**
+**POST /led/{strip_id}**
 Changes strip RGB values.
 Returns new values and current mode on success.
 Returns a 400 BAD REQUEST if POST data in incorrect format and 401 UNAUTHORISED if authentiction needed but not supplied.
