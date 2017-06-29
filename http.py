@@ -27,12 +27,13 @@ def get_info():
 
 @lednet.route('/config', methods=['GET', 'POST'])
 def get_config():
-    if (request.method == 'GET'):
+    if (request.method == 'GET') and is_auth_needed():
         abort(401)
-    if not (request.json):
-        abort(400)
-    if not (check_auth(request.json)):
-        abort(401)
+    if (request.method == 'POST') and is_auth_needed():
+        if not (request.json):
+            abort(400)
+        if not (check_auth(request.json)):
+            abort(401)
     return json.dumps(LEDnet.config)
 
 # See system LED data
@@ -76,6 +77,9 @@ def set_strip_rgb(strip_id):
 ##
 # Check Auth
 ##
+def is_auth_needed():
+    return LEDnet.config.has_key("authKey")
+
 def check_auth(json_data):
     if (LEDnet.config.has_key("authKey") and not 'authKey' in json_data):
         return False
