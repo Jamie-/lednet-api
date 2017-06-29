@@ -60,13 +60,13 @@ def set_strip_rgb(strip_id):
     strip = get_strip(strip_id)
     if (strip == None):
         abort(404)
-    r = request.json.get('r')
+    r = request.json.get('red')
     if not (isinstance(r, int) and 0 <= r <= 255):
         abort(400)
-    g = request.json.get('g')
+    g = request.json.get('green')
     if not (isinstance(g, int) and 0 <= g <= 255):
         abort(400)
-    b = request.json.get('b')
+    b = request.json.get('blue')
     if not (isinstance(b, int) and 0 <= b <= 255):
         abort(400)
     strip.setRgb(r, g, b)
