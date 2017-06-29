@@ -133,12 +133,20 @@ Returns 401 UNAUTHORISED if authentication is incorrect and 400 BAD REQUEST if P
 ### View Strip Info ###
 
 **GET /led**
-Returns number of strips on system.
+Returns data for all strips attached to the system.
 
 #### Response Structure ####
 | Field  | Type | Description                        |
 | ------ | ---- | ---------------------------------- |
 | strips | list | List of strips attached to system. |
+
+#### Strips Structure ####
+| Field  | Type    | Description            |
+| ------ | ------- | ---------------------- |
+| device | string  | Device port.           |
+| id     | string  | ID of strip.           |
+| name   | string  | Pretty name of strip.  |
+| number | integer | Strip index on system. |
 
 ### View/Change Strip Values ###
 
