@@ -7,6 +7,7 @@ import sys
 from data import LEDnet
 from strip import Strip
 import serial
+import watcher
 
 # Set paths
 __location__ = os.path.realpath(
@@ -63,6 +64,7 @@ def sigint_handler(signum, frame):
     for s in LEDnet.devices:
         LEDnet.devices[s].close()
     print "[INFO] LEDnet now quitting..."
+    watcher.stop()
     sys.exit()
     
 signal.signal(signal.SIGINT, sigint_handler)
@@ -91,5 +93,7 @@ if (__name__) == '__main__':
             LEDnet.devices[s["device"]] = serial.Serial(s["device"], 9600)
     print "[INFO] Connected to " + str(len(LEDnet.devices)) + " slave device(s)."
 
+    watcher.start()
+    
     # Start HTTP server
     http.start_server()
