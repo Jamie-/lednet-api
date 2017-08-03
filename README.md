@@ -23,42 +23,41 @@ TBC
 | ---------- | ------- | ------------------------------------------- |
 | systemName | string  | System name.                                |
 | strips     | list    | Configuration of strips attached to system. |
-| illuminate | JSON    | Illumination colour setting.                |
-| cycle      | JSON    | Day/Night cycle start times.                |
-| authKey    | string  | System authentication key.                  |
+| cycles     | list    | System cycle settings (optional).           |
+| authKey    | string  | API authentication key (optional).          |
 
-#### Illumination Options ####
+#### Cycles Configuration ####
 
-| Field | Type    | Description  |
-| ----- | ------- | ------------ |
-| red   | integer | Red value.   |
-| green | integer | Green value. |
-| blue  | integer | Blue value.  |
+| Field  | Type   | Description                                   |
+| ------ | ------ | --------------------------------------------- |
+| name   | string | Cycle name.                                   |
+| mode   | string | Cycle mode: `normal`, `static` and `off`.     |
+| target | string | Target strip name or `global` for all strips. |
+| start  | string | Cycle starting time in format `%H:%M.%S`.     |
+| values | object | Static colour values if mode is `static`.     |
 
-#### Cycle Options ####
+##### Cycle Modes #####
+* Normal: Network controlled mode. Uses last set value or black if none set yet.
+* Static: Static colour as defined in `values` object.
+* Off: Static black colour - i.e. all channels at 0.
 
-| Field      | Type   | Description                      |
-| ---------- | ------ | -------------------------------- |
-| normal     | string | Starting time for day cycle.     |
-| illuminate | string | Starting time for evening cycle. |
-| standby    | string | Starting time for night cycle.   |
+##### Values #####
+Integer values (0 - 255) are required for keys: `red`, `green` and `blue`.
 
-Time needs to be given in the format `%H:%M.%S`.
+#### Strips Configuration ####
 
-#### Strips Options ####
-
-| Field  | Type    | Description                    |
-| ------ | ------- | ------------------------------ |
-| id     | string  | Strip identifier used for API. |
-| name   | string  | Pretty name for strip.         |
-| device | string  | Serial device for strip.       |
-| number | integer | Serial device strip number.    |
+| Field  | Type    | Description                           |
+| ------ | ------- | ------------------------------------- |
+| id     | string  | Strip identifier used for API.        |
+| name   | string  | Pretty name for strip.                |
+| device | string  | System serial slave device for strip. |
+| number | integer | Slave device strip number.            |
 
 #### Example Config ####
 
 ``` json
 {
-    "systemName": "namae",
+    "systemName": "My LEDnet",
     "strips" : [
         {
             "name": "Kitchen Wall",
@@ -79,16 +78,31 @@ Time needs to be given in the format `%H:%M.%S`.
             "number": 0
         }
     ],
-    "illuminate": {
-      "red": 128,
-      "green": 128,
-      "blue": 128
-    },
-    "cycle": {
-        "day": "08:00.00",
-        "evening": "21:30.00",
-        "night": "23:30.00"
-    },
+    "cycles": [
+      {
+        "name": "day",
+        "mode": "normal",
+        "target": "global",
+        "start": "08:00.00"
+      },
+      {
+        "name": "evening",
+        "mode": "static",
+        "target": "global",
+        "values": {
+          "red": 128,
+          "green": 128,
+          "blue": 128
+        },
+        "start": "21:30.00"
+      },
+      {
+        "name": "night",
+        "mode": "off",
+        "target": "global",
+        "start": "23:30.00"
+      }
+    ],
     "authKey": "asdfghjkl"
 }
 ```
