@@ -8,6 +8,7 @@ from data import LEDnet
 from strip import Strip
 import serial
 import watcher
+import socket
 
 # Set paths
 __location__ = os.path.realpath(
@@ -83,6 +84,10 @@ if (__name__) == '__main__':
     print "Welcome to LEDnet!"
     print
     
+    hostname = socket.gethostname()
+    print "[INFO] System hostname: %s" % hostname
+    print "[INFO] IP address based on hostname: %s" % socket.gethostbyname(hostname)
+
     # Load config
     LEDnet.config = load_config()
     
