@@ -31,20 +31,19 @@ class Strip:
     
     def get_mode(self):
         return self.mode
-    
-    def resume(self):
-        self.mode = "normal"
-        output(self, r, g, b)
-    
-    def illuminate(self):
-        self.mode = "illuminate"
-        i = LEDnet.config["illuminate"]
-        output(self, i["red"], i["green"], i["blue"])
-    
-    def standby(self):
-        self.mode = "standby"
-        output(self, 0, 0, 0)
-        
+
+    # Set strip mode and output to strip
+    def set_mode(self, mode, r=None, g=None, b=None):
+        if (mode == "normal"):
+            self.mode = "normal"
+            output(self, self.r, self.g, self.b)
+        elif (mode == "static"):
+            self.mode = "static"
+            output(self, r, g, b)
+        else:
+            self.mode == "off"
+            output(self, 0, 0, 0)
+
     def get_data_as_json(self):
         return jsonify(
             {
