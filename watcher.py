@@ -24,7 +24,7 @@ def watch():
             cycles.append(Cycle(c["name"], c["mode"], target, time, values=c["values"]))
         else:
             cycles.append(Cycle(c["name"], c["mode"], target, time))
-    cycles.sort(key=operator.attrgetter('time')) # Sort cycles by time
+    cycles.sort(key=operator.attrgetter('time'), reverse=True) # Sort cycles by time (reversed)
 
     tick_time = 0 # Tick loop counter
     current_cycle = None
@@ -33,33 +33,38 @@ def watch():
     while not (is_stopped()):
         if (tick_time == 0): # Run once a tick
             now = datetime.now().time()
-            prev = None # Previous cycle in loop
             for c in cycles:
-                if not(prev == None): # Loop works off of last seen cycle and uses 'c' to test with
-                    if (c.get_time() > now >= prev.get_time()):
-                        # Do not change output if cycle already active
-                        if (current_cycle == None) or (current_cycle.get_name() != prev.get_name()):
-                            print "[WTCH] Incrementing cycle to " + str(prev.get_name()) + "."
-                            if (prev.get_target() == None): # Global cycle
-                                for s in LEDnet.strips:
-                                    if (prev.get_mode() == "static"):
-                                        v = prev.get_values()
-                                        s.set_mode(prev.get_mode(), r=v["red"], g=v["green"], b=v["blue"])
-                                    else:
-                                        s.set_mode(prev.get_mode())
-                            else: # Single strip cycle
-                                if (prev.get_mode() == "static"):
-                                    v = prev.get_values()
-                                    prev.get_target().set_mode(prev.get_mode(), r=v["red"], g=v["green"], b=b["blue"])
-                                else:
-                                    prev.get_target().set_mode(prev.get_mode())
-                            current_cycle = prev
-                        break # Exit cycle time-check loop as time has been found
-                prev = c
+                if (now >= c.get_time()): # Check if cycle should have started
+                    # Do not change output if cycle already active
+                    if (current_cycle == None) or (current_cycle.get_name() != c.get_name()):
+                        print "[WTCH] Incrementing cycle to " + str(c.get_name()) + "."
+                        set_cycle(c)
+                        current_cycle = c
+                    break # Exit cycle time-check loop as time has been found
+            if (current_cycle == None): # If started up before first cycle
+                print "[WTCH] Incrementing cycle to " + str(cycles[0].get_name()) + "."
+                current_cycle = cycles[0]
+                set_cycle(cycles[0])
         tick_time += 1 # Increment tick counter
         if (tick_time > 60): # Set tick as 60s
             tick_time = 0
         sleep(1)
+
+def set_cycle(c):
+    if (c.get_target() == None): # Global cycle
+        for s in LEDnet.strips:
+            if (c.get_mode() == "static"):
+                v = c.get_values()
+                s.set_mode(c.get_mode(), r=v["red"], g=v["green"], b=v["blue"])
+            else:
+                s.set_mode(c.get_mode())
+    else: # Single strip cycle
+        if (c.get_mode() == "static"):
+            v = c.get_values()
+            c.get_target().set_mode(c.get_mode(), r=v["red"], g=v["green"], b=b["blue"])
+        else:
+            c.get_target().set_mode(c.get_mode())
+
 ##
 # Thread Control
 ##
