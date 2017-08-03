@@ -7,6 +7,7 @@ import sys
 from data import LEDnet
 from strip import Strip
 import serial
+import watcher
 import socket
 
 # Set paths
@@ -59,11 +60,14 @@ def save_state():
     
 # Add SIGINT handler (for ctrl-c interrupt)
 def sigint_handler(signum, frame):
+    print # Print new line to keep logging inline
     save_state()
     print "[INFO] Closing output devices..."
     for s in LEDnet.devices:
         LEDnet.devices[s].close()
     print "[INFO] LEDnet now quitting..."
+    if (LEDnet.config.has_key("cycles")):
+        watcher.stop()
     sys.exit()
     
 signal.signal(signal.SIGINT, sigint_handler)
@@ -95,6 +99,9 @@ if (__name__) == '__main__':
         if not (s["device"] in LEDnet.devices):
             LEDnet.devices[s["device"]] = serial.Serial(s["device"], 9600)
     print "[INFO] Connected to " + str(len(LEDnet.devices)) + " slave device(s)."
+
+    if (LEDnet.config.has_key("cycles")):
+        watcher.start()
 
     # Start HTTP server
     http.start_server()
