@@ -8,6 +8,7 @@ from data import LEDnet
 from strip import Strip
 import serial
 import watcher
+import discovery
 import socket
 
 # Set paths
@@ -68,6 +69,7 @@ def sigint_handler(signum, frame):
     print "[INFO] LEDnet now quitting..."
     if (LEDnet.config.has_key("cycles")):
         watcher.stop()
+    discovery.stop()
     sys.exit()
     
 signal.signal(signal.SIGINT, sigint_handler)
@@ -102,6 +104,9 @@ if (__name__) == '__main__':
 
     if (LEDnet.config.has_key("cycles")):
         watcher.start()
+
+    # Start discovery thread
+    discovery.start()
 
     # Start HTTP server
     http.start_server()
