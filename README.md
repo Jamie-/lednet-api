@@ -9,11 +9,6 @@ The Uno has 6 PWM lanes so can drive 2 strips, with the help of some MOSFETS.
 See setup below on how to wire it up.
 The whole system is controlled by a REST API on the Pi.
 
-Control Clients:
- * Android App (WIP) - written by me.
- * iOS App (WIP) - written by Huw Jones.
- * EMF Tilda MkPi Badge App (WIP) - written by me.
-
 ## Installation / Setup ##
 TBC
 
